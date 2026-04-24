@@ -2,7 +2,12 @@ import { useEffect, useState, useRef } from 'react';
 import './App.css';
 import { supabase } from './supabaseClient';
 
-/* ── Admin email whitelist ── */
+/* ──────────────────────────────────────
+   ADMIN EMAIL WHITELIST
+   ⚠️  ONLY EMAILS IN THIS LIST GET ADMIN ACCESS
+   ⚠️  NEW ADMINS ADDED TO DB WON'T GET ACCESS
+   ⚠️  EXPLICITLY ADD EMAIL HERE TO GRANT ADMIN RIGHTS
+   ────────────────────────────────────── */
 const ADMIN_EMAILS = [
   'aruneshownsty1@gmail.com',
   'harinisrim27@gmail.com',
@@ -115,6 +120,356 @@ function saveEvents(events) {
 /* ═══════════════════════════════════════
    COMPONENTS
    ═══════════════════════════════════════ */
+
+/* ── Login Page Component ── */
+function LoginPage({ onLogin }) {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleEmailPasswordLogin = async () => {
+    if (!email.trim() || !password.trim()) {
+      setError('Please enter both email and password');
+      return;
+    }
+    
+    setLoading(true);
+    setError('');
+    
+    try {
+      const { data, error: signInError } = await supabase.auth.signInWithPassword({
+        email: email.trim(),
+        password: password.trim(),
+      });
+      
+      if (signInError) {
+        setError(signInError.message || 'Login failed');
+      } else if (data?.user) {
+        onLogin(data.user);
+      }
+    } catch (err) {
+      setError(err?.message || 'An error occurred');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    setLoading(true);
+    try {
+      await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: { redirectTo: window.location.origin }
+      });
+    } catch (err) {
+      setError('Google login failed');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div style={{
+      minHeight: '100vh',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      background: 'linear-gradient(135deg, #0a0e27 0%, #1a1635 100%)',
+      fontFamily: '"Orbitron", sans-serif',
+      position: 'relative',
+      overflow: 'hidden'
+    }}>
+      {/* Background stars */}
+      <div style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        background: 'radial-gradient(2px 2px at 20% 30%, rgba(180,220,255,0.3), rgba(0,0,0,0))',
+        backgroundSize: '200px 200px',
+        zIndex: 0,
+      }} />
+
+      <div style={{
+        maxWidth: '420px',
+        width: '100%',
+        margin: '0 16px',
+        zIndex: 1,
+      }}>
+        {/* Card Container */}
+        <div style={{
+          background: 'rgba(10,14,39,0.95)',
+          border: '2px solid rgba(0,245,255,0.4)',
+          borderRadius: '8px',
+          padding: '48px 32px',
+          boxShadow: '0 0 40px rgba(0,245,255,0.1), inset 0 0 40px rgba(0,245,255,0.02)',
+          backdropFilter: 'blur(10px)',
+        }}>
+          {/* Logo/Title */}
+          <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+            <div style={{
+              fontSize: '36px',
+              marginBottom: '12px',
+              animation: 'pulse 2s infinite',
+            }}>
+              ◆
+            </div>
+            <h1 style={{
+              fontSize: '24px',
+              color: 'var(--neon-cyan)',
+              margin: '0 0 8px 0',
+              letterSpacing: '2px',
+              textShadow: '0 0 10px rgba(0,245,255,0.3)',
+            }}>
+              PCDP PORTAL
+            </h1>
+            <p style={{
+              fontSize: '12px',
+              color: 'rgba(0,245,255,0.6)',
+              letterSpacing: '1px',
+              margin: 0,
+            }}>
+              ADMIN ACCESS
+            </p>
+          </div>
+
+          {/* Welcome Message */}
+          <div style={{
+            textAlign: 'center',
+            marginBottom: '32px',
+            padding: '16px',
+            background: 'rgba(0,245,255,0.05)',
+            border: '1px solid rgba(0,245,255,0.2)',
+            borderRadius: '4px',
+          }}>
+            <p style={{
+              color: 'var(--neon-cyan)',
+              fontSize: '14px',
+              margin: 0,
+              letterSpacing: '0.5px',
+            }}>
+              Hi, Welcome Back!
+            </p>
+          </div>
+
+          {/* Email Input */}
+          <div style={{ marginBottom: '16px' }}>
+            <label style={{
+              display: 'block',
+              color: 'rgba(255,255,255,0.7)',
+              fontSize: '12px',
+              marginBottom: '6px',
+              letterSpacing: '0.5px',
+              textTransform: 'uppercase',
+            }}>
+              Email Address
+            </label>
+            <input
+              type="email"
+              placeholder="you@example.com"
+              value={email}
+              onChange={e => {
+                setEmail(e.target.value);
+                setError('');
+              }}
+              onKeyDown={e => e.key === 'Enter' && handleEmailPasswordLogin()}
+              disabled={loading}
+              style={{
+                width: '100%',
+                padding: '12px 14px',
+                background: 'rgba(0,245,255,0.05)',
+                border: '1px solid rgba(0,245,255,0.3)',
+                borderRadius: '4px',
+                color: 'var(--neon-cyan)',
+                fontSize: '13px',
+                fontFamily: 'inherit',
+                boxSizing: 'border-box',
+                transition: 'all 0.2s',
+              }}
+              onFocus={e => e.target.style.borderColor = 'var(--neon-cyan)'}
+              onBlur={e => e.target.style.borderColor = 'rgba(0,245,255,0.3)'}
+            />
+          </div>
+
+          {/* Password Input */}
+          <div style={{ marginBottom: '24px' }}>
+            <label style={{
+              display: 'block',
+              color: 'rgba(255,255,255,0.7)',
+              fontSize: '12px',
+              marginBottom: '6px',
+              letterSpacing: '0.5px',
+              textTransform: 'uppercase',
+            }}>
+              Password
+            </label>
+            <input
+              type="password"
+              placeholder="Enter your password"
+              value={password}
+              onChange={e => {
+                setPassword(e.target.value);
+                setError('');
+              }}
+              onKeyDown={e => e.key === 'Enter' && handleEmailPasswordLogin()}
+              disabled={loading}
+              style={{
+                width: '100%',
+                padding: '12px 14px',
+                background: 'rgba(0,245,255,0.05)',
+                border: '1px solid rgba(0,245,255,0.3)',
+                borderRadius: '4px',
+                color: 'var(--neon-cyan)',
+                fontSize: '13px',
+                fontFamily: 'inherit',
+                boxSizing: 'border-box',
+                transition: 'all 0.2s',
+              }}
+              onFocus={e => e.target.style.borderColor = 'var(--neon-cyan)'}
+              onBlur={e => e.target.style.borderColor = 'rgba(0,245,255,0.3)'}
+            />
+          </div>
+
+          {/* Error Message */}
+          {error && (
+            <div style={{
+              marginBottom: '16px',
+              padding: '10px 12px',
+              background: 'rgba(255,107,107,0.1)',
+              border: '1px solid rgba(255,107,107,0.4)',
+              borderRadius: '4px',
+              color: 'rgb(255,107,107)',
+              fontSize: '12px',
+              lineHeight: '1.4',
+            }}>
+              {error}
+            </div>
+          )}
+
+          {/* Login Button */}
+          <button
+            onClick={handleEmailPasswordLogin}
+            disabled={loading}
+            style={{
+              width: '100%',
+              padding: '12px',
+              background: 'var(--neon-cyan)',
+              border: 'none',
+              borderRadius: '4px',
+              color: '#000',
+              fontSize: '14px',
+              fontWeight: 'bold',
+              letterSpacing: '1px',
+              cursor: loading ? 'not-allowed' : 'pointer',
+              fontFamily: 'inherit',
+              transition: 'all 0.3s',
+              marginBottom: '16px',
+              opacity: loading ? 0.6 : 1,
+            }}
+            onMouseEnter={e => !loading && (e.target.style.boxShadow = '0 0 20px var(--neon-cyan)')}
+            onMouseLeave={e => (e.target.style.boxShadow = 'none')}
+          >
+            {loading ? 'LOGGING IN...' : 'LOGIN'}
+          </button>
+
+          {/* Divider */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            margin: '24px 0',
+            gap: '12px',
+          }}>
+            <div style={{
+              flex: 1,
+              height: '1px',
+              background: 'rgba(0,245,255,0.2)',
+            }} />
+            <span style={{
+              color: 'rgba(0,245,255,0.5)',
+              fontSize: '12px',
+              textTransform: 'uppercase',
+              letterSpacing: '1px',
+            }}>
+              Or
+            </span>
+            <div style={{
+              flex: 1,
+              height: '1px',
+              background: 'rgba(0,245,255,0.2)',
+            }} />
+          </div>
+
+          {/* Google Login Button */}
+          <button
+            onClick={handleGoogleLogin}
+            disabled={loading}
+            style={{
+              width: '100%',
+              padding: '12px',
+              background: 'rgba(255,255,255,0.05)',
+              border: '1px solid rgba(255,255,255,0.2)',
+              borderRadius: '4px',
+              color: 'rgba(255,255,255,0.8)',
+              fontSize: '13px',
+              fontWeight: '600',
+              letterSpacing: '0.5px',
+              cursor: loading ? 'not-allowed' : 'pointer',
+              fontFamily: 'inherit',
+              transition: 'all 0.3s',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '8px',
+              opacity: loading ? 0.6 : 1,
+            }}
+            onMouseEnter={e => !loading && (e.target.style.background = 'rgba(255,255,255,0.1)')}
+            onMouseLeave={e => (e.target.style.background = 'rgba(255,255,255,0.05)')}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" style={{marginTop: '2px'}}>
+              <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.07 5.07 0 01-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+              <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+              <path d="M5.84 14.09a7.04 7.04 0 010-4.18V7.07H2.18A11.96 11.96 0 001 12c0 1.94.47 3.77 1.18 5.43l3.66-2.84.81-.5z" fill="#FBBC05"/>
+              <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+            </svg>
+            SIGN IN WITH GOOGLE
+          </button>
+
+          {/* Admin Info */}
+          <div style={{
+            marginTop: '24px',
+            padding: '12px',
+            background: 'rgba(255,255,100,0.05)',
+            border: '1px solid rgba(255,255,100,0.2)',
+            borderRadius: '4px',
+            fontSize: '11px',
+            color: 'rgba(255,255,200,0.6)',
+            lineHeight: '1.5',
+            textAlign: 'center',
+          }}>
+            ⚠ ADMIN ACCESS ONLY
+            <br />
+            Authorized admins:
+            <br />
+            {ADMIN_EMAILS.map((email, idx) => (
+              <div key={idx} style={{ color: 'rgba(0,245,255,0.6)', marginTop: '4px' }}>
+                • {email}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <style>{`
+        @keyframes pulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.5; }
+        }
+      `}</style>
+    </div>
+  );
+}
 
 /* ── Modal Overlay ── */
 function Modal({ title, onClose, children }) {
@@ -304,9 +659,6 @@ function App() {
   }, []);
 
   /* ── Auth actions ── */
-  const login = async () => {
-    await supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.origin } });
-  };
   const logout = async () => {
     await supabase.auth.signOut();
     setSession(null);
@@ -449,6 +801,18 @@ function App() {
     );
   }
 
+  // Show login page if not authenticated or not authorized admin
+  if (!session || !isAdmin) {
+    return (
+      <LoginPage 
+        onLogin={() => {
+          // Session will be updated via auth state change listener
+          // which will trigger a re-render
+        }}
+      />
+    );
+  }
+
   return (
     <>
       <canvas ref={canvasRef} style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', zIndex: 0, pointerEvents: 'none' }} />
@@ -472,25 +836,11 @@ function App() {
 
         {/* ── AUTH BAR ── */}
         <div className="auth-bar">
-          {session ? (
-            <>
-              <span className="auth-badge auth-badge-green">
-                ✓ {session.user.email}
-                {isAdmin && <span className="admin-tag">ADMIN</span>}
-              </span>
-              <button className="btn-small btn-pink" onClick={logout}>LOGOUT</button>
-            </>
-          ) : (
-            <button className="btn-small btn-cyan" onClick={login}>
-              <svg width="16" height="16" viewBox="0 0 24 24" style={{verticalAlign: 'middle', marginRight: '6px'}}>
-                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.07 5.07 0 01-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-                <path d="M5.84 14.09a7.04 7.04 0 010-4.18V7.07H2.18A11.96 11.96 0 001 12c0 1.94.47 3.77 1.18 5.43l3.66-2.84.81-.5z" fill="#FBBC05"/>
-                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-              </svg>
-              ADMIN LOGIN
-            </button>
-          )}
+          <span className="auth-badge auth-badge-green">
+            ✓ {session.user.email}
+            <span className="admin-tag">ADMIN</span>
+          </span>
+          <button className="btn-small btn-pink" onClick={logout}>LOGOUT</button>
         </div>
 
         {/* ── STATS BAR ── */}
