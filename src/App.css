@@ -1,0 +1,268 @@
+.header {
+  text-align: center;
+  padding: 60px 20px 40px;
+  position: relative;
+}
+
+.header-badge {
+  display: inline-block;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 4px;
+  color: var(--neon-cyan);
+  background: rgba(0,245,255,0.08);
+  border: 1px solid rgba(0,245,255,0.3);
+  padding: 6px 18px;
+  border-radius: 2px;
+  margin-bottom: 20px;
+  animation: fadeInDown 0.6s ease both;
+}
+
+.header h1 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(28px, 6vw, 64px);
+  font-weight: 900;
+  line-height: 1.1;
+  background: linear-gradient(135deg, var(--neon-cyan) 0%, #ffffff 50%, var(--neon-pink) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: fadeInDown 0.8s ease 0.2s both;
+  text-shadow: none;
+}
+
+.header-sub {
+  margin-top: 14px;
+  font-size: 16px;
+  color: rgba(255,255,255,0.5);
+  letter-spacing: 2px;
+  font-weight: 300;
+  animation: fadeInDown 0.8s ease 0.4s both;
+}
+
+.header-line {
+  margin: 30px auto 0;
+  width: 200px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
+  animation: expandWidth 1s ease 0.6s both;
+}
+
+.stats-bar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin: 40px 0;
+  animation: fadeIn 1s ease 0.8s both;
+}
+
+.stat-item {
+  background: var(--card-bg);
+  border: 1px solid rgba(0,245,255,0.2);
+  border-radius: 4px;
+  padding: 16px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s, border-color 0.3s;
+}
+
+.stat-item:hover {
+  transform: translateY(-3px);
+  border-color: var(--neon-cyan);
+}
+
+.stat-item::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--neon-cyan);
+}
+
+.stat-num {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--neon-cyan);
+  display: block;
+}
+
+.stat-label {
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: rgba(255,255,255,0.4);
+  margin-top: 4px;
+  text-transform: uppercase;
+}
+
+.section-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 13px;
+  letter-spacing: 5px;
+  color: var(--neon-cyan);
+  opacity: 0.7;
+  text-transform: uppercase;
+  margin: 50px 0 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.section-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(0,245,255,0.3), transparent);
+}
+
+.live-ticker {
+  text-align: center;
+  padding: 20px;
+  background: rgba(0,245,255,0.04);
+  border: 1px solid rgba(0,245,255,0.12);
+  border-radius: 6px;
+  margin: 40px 0;
+  animation: pulseGlow 3s ease-in-out infinite;
+}
+
+.ticker-label {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 4px;
+  color: rgba(0,245,255,0.5);
+  margin-bottom: 8px;
+}
+
+.ticker-time {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(18px, 4vw, 32px);
+  color: var(--neon-cyan);
+  letter-spacing: 3px;
+}
+
+.event-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-glow);
+  border-radius: 8px;
+  margin-bottom: 24px;
+  overflow: hidden;
+  position: relative;
+  transition: transform 0.4s ease, box-shadow 0.4s ease, border-color 0.4s;
+  animation: slideInUp 0.7s ease both;
+}
+
+.event-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 60px rgba(0,245,255,0.15);
+  border-color: var(--neon-cyan);
+}
+
+.event-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+}
+
+.card-theme-0::before { background: linear-gradient(90deg, #4285f4, #34a853, #fbbc05, #ea4335); }
+.card-theme-1::before { background: linear-gradient(90deg, var(--neon-green), var(--neon-cyan)); }
+.card-theme-2::before { background: linear-gradient(90deg, #714b67, #c63b74, var(--neon-pink)); }
+.card-theme-3::before { background: linear-gradient(90deg, var(--neon-orange), var(--neon-pink), var(--neon-purple)); }
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 28px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.event-icon {
+  font-size: 32px;
+  margin-right: 14px;
+  flex-shrink: 0;
+}
+
+.event-title-block { display: flex; align-items: center; flex: 1; min-width: 0; }
+
+.event-name {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(14px, 3vw, 22px);
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.event-category {
+  display: inline-block;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  padding: 3px 10px;
+  border-radius: 2px;
+  margin-top: 5px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+.deadline-chip {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 12px;
+  padding: 8px 16px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.card-body { padding: 24px 28px; }
+
+.teams-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.teams-grid.two-col { grid-template-columns: 1fr 1fr; }
+.teams-grid.one-col { grid-template-columns: 1fr; }
+
+@media (max-width: 600px) {
+  .teams-grid.two-col, .teams-grid.three-col { grid-template-columns: 1fr; }
+  .stats-bar { grid-template-columns: repeat(2, 1fr); }
+}
+
+.team-block {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 6px;
+  padding: 16px 18px;
+  position: relative;
+  transition: background 0.3s, border-color 0.3s;
+}
+
+.team-label {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: rgba(255,255,255,0.35);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.team-label::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.08); }
+
+.member-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  transition: color 0.2s;
+}
+.member-row:last-child { border-bottom: none; }
+.member-row:hover { color: var(--neon-cyan); }
