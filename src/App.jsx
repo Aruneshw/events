@@ -8,151 +8,131 @@ const ADMIN_EMAILS = [
   'harinisrim27@gmail.com',
 ];
 
-/* ── Hardcoded Event Data (from original index.html) ── */
-const EVENTS = [
+/* ── Theme presets for event cards ── */
+const THEMES = [
+  { themeClass: 'card-theme-0', nameColor: '#7eb8f7', categoryStyle: { background: 'rgba(66,133,244,0.15)', color: '#7eb8f7', border: '1px solid rgba(66,133,244,0.3)' }, deadlineClass: 'deadline-red' },
+  { themeClass: 'card-theme-1', nameColor: 'var(--neon-green)', categoryStyle: { background: 'rgba(57,255,20,0.1)', color: 'var(--neon-green)', border: '1px solid rgba(57,255,20,0.3)' }, deadlineClass: 'deadline-green' },
+  { themeClass: 'card-theme-2', nameColor: '#e690b0', categoryStyle: { background: 'rgba(198,59,116,0.15)', color: '#e690b0', border: '1px solid rgba(198,59,116,0.3)' }, deadlineClass: 'deadline-orange' },
+  { themeClass: 'card-theme-3', nameColor: 'var(--neon-orange)', categoryStyle: { background: 'rgba(255,149,0,0.1)', color: 'var(--neon-orange)', border: '1px solid rgba(255,149,0,0.3)' }, deadlineClass: 'deadline-purple' },
+];
+
+/* ── Default Event Data ── */
+const DEFAULT_EVENTS = [
   {
-    id: 1,
-    icon: '🌐',
-    name: 'GOOGLE SOLUTION CHALLENGE',
-    category: 'GLOBAL HACKATHON · SDG · GOOGLE TECH',
-    deadline: '⚠ SUBMISSION: MAY 2025',
-    deadlineClass: 'deadline-red',
-    themeClass: 'card-theme-0',
-    nameColor: '#7eb8f7',
+    id: 1, icon: '🌐', name: 'GOOGLE SOLUTION CHALLENGE',
+    category: 'GLOBAL HACKATHON · SDG · GOOGLE TECH', deadline: '⚠ SUBMISSION: MAY 2025',
+    deadlineClass: 'deadline-red', themeClass: 'card-theme-0', nameColor: '#7eb8f7',
     categoryStyle: { background: 'rgba(66,133,244,0.15)', color: '#7eb8f7', border: '1px solid rgba(66,133,244,0.3)' },
     teams: [
-      {
-        label: '▶ TEAM ALPHA', isCaptain: true,
-        members: [
-          { name: 'ARUNESHWARAN K', num: '01', isLead: true },
-          { name: 'HARINISRI', num: '02' },
-          { name: 'SHARANESH', num: '03' },
-        ]
-      },
-      {
-        label: '▶ TEAM BRAVO',
-        members: [
-          { name: 'HEMAVARTHINI', num: '01', isLead: true },
-          { name: 'GOKUL KANNAN', num: '02' },
-          { name: 'VETHAYOGESH', num: '03' },
-          { name: 'NIKHILESH', num: '04' },
-        ]
-      },
+      { label: '▶ TEAM ALPHA', isCaptain: true, members: [
+        { name: 'ARUNESHWARAN K', num: '01', isLead: true },
+        { name: 'HARINISRI', num: '02' }, { name: 'SHARANESH', num: '03' },
+      ]},
+      { label: '▶ TEAM BRAVO', members: [
+        { name: 'HEMAVARTHINI', num: '01', isLead: true },
+        { name: 'GOKUL KANNAN', num: '02' }, { name: 'VETHAYOGESH', num: '03' }, { name: 'NIKHILESH', num: '04' },
+      ]},
     ],
     meta: [
-      { color: '#4285f4', text: 'USE GOOGLE TECHNOLOGIES' },
-      { color: '#34a853', text: 'ADDRESS UN SDGs' },
-      { color: '#fbbc05', text: 'PRIZE: ₹8,00,000 POOL' },
-      { color: '#ea4335', text: 'GLOBAL COMPETITION' },
+      { color: '#4285f4', text: 'USE GOOGLE TECHNOLOGIES' }, { color: '#34a853', text: 'ADDRESS UN SDGs' },
+      { color: '#fbbc05', text: 'PRIZE: ₹8,00,000 POOL' }, { color: '#ea4335', text: 'GLOBAL COMPETITION' },
     ],
-    badge: '7 MEMBERS · 2 TEAMS',
   },
   {
-    id: 2,
-    icon: '🛡️',
-    name: 'CYBER NEXUS',
-    category: 'CTF · CYBERSECURITY · CAPTURE THE FLAG',
-    deadline: '● DEADLINE: TBD',
-    deadlineClass: 'deadline-green',
-    themeClass: 'card-theme-1',
-    nameColor: 'var(--neon-green)',
+    id: 2, icon: '🛡️', name: 'CYBER NEXUS',
+    category: 'CTF · CYBERSECURITY · CAPTURE THE FLAG', deadline: '● DEADLINE: TBD',
+    deadlineClass: 'deadline-green', themeClass: 'card-theme-1', nameColor: 'var(--neon-green)',
     categoryStyle: { background: 'rgba(57,255,20,0.1)', color: 'var(--neon-green)', border: '1px solid rgba(57,255,20,0.3)' },
     teams: [
-      {
-        label: '▶ TEAM ALPHA', isCaptain: true,
-        members: [
-          { name: 'ARUNESHWARAN K', num: '01', isLead: true },
-          { name: 'HARISH', num: '02' },
-        ]
-      },
-      {
-        label: '▶ TEAM BRAVO',
-        members: [
-          { name: 'VARUNRAJ', num: '01', isLead: true },
-          { name: 'HARINISRI', num: '02' },
-          { name: 'SHARANESH', num: '03' },
-          { name: 'HEMAVARTHINI', num: '04' },
-        ]
-      },
+      { label: '▶ TEAM ALPHA', isCaptain: true, members: [
+        { name: 'ARUNESHWARAN K', num: '01', isLead: true }, { name: 'HARISH', num: '02' },
+      ]},
+      { label: '▶ TEAM BRAVO', members: [
+        { name: 'VARUNRAJ', num: '01', isLead: true }, { name: 'HARINISRI', num: '02' },
+        { name: 'SHARANESH', num: '03' }, { name: 'HEMAVARTHINI', num: '04' },
+      ]},
     ],
     meta: [
       { color: 'var(--neon-green)', text: 'WEB RECON · FORENSICS · PWNING' },
-      { color: 'var(--neon-cyan)', text: 'JEOPARDY FORMAT' },
-      { color: '#7fffd4', text: 'ACTIVE CTF PREPARATION' },
+      { color: 'var(--neon-cyan)', text: 'JEOPARDY FORMAT' }, { color: '#7fffd4', text: 'ACTIVE CTF PREPARATION' },
     ],
-    badge: '6 MEMBERS · 2 TEAMS',
   },
   {
-    id: 3,
-    icon: '⚙️',
-    name: 'ODOO HACKATHON',
-    category: 'ERP · BUSINESS TECH · FULL STACK',
-    deadline: '📌 SUBMISSION: JUL 13, 2025',
-    deadlineClass: 'deadline-orange',
-    themeClass: 'card-theme-2',
-    nameColor: '#e690b0',
+    id: 3, icon: '⚙️', name: 'ODOO HACKATHON',
+    category: 'ERP · BUSINESS TECH · FULL STACK', deadline: '📌 SUBMISSION: JUL 13, 2025',
+    deadlineClass: 'deadline-orange', themeClass: 'card-theme-2', nameColor: '#e690b0',
     categoryStyle: { background: 'rgba(198,59,116,0.15)', color: '#e690b0', border: '1px solid rgba(198,59,116,0.3)' },
     teams: [
-      {
-        label: '▶ TEAM GAMMA — SINGLE SQUAD', isCaptain: true,
-        members: [
-          { name: 'ARUNESHWARAN K', num: '01', isLead: true },
-          { name: 'VARUNRAJ', num: '02' },
-          { name: 'HARINISRI', num: '03' },
-        ]
-      },
+      { label: '▶ TEAM GAMMA — SINGLE SQUAD', isCaptain: true, members: [
+        { name: 'ARUNESHWARAN K', num: '01', isLead: true }, { name: 'VARUNRAJ', num: '02' }, { name: 'HARINISRI', num: '03' },
+      ]},
     ],
     meta: [
-      { color: '#714b67', text: 'BUILD ON ODOO PLATFORM' },
-      { color: '#c63b74', text: 'VIRTUAL → ON-SITE AT GANDHINAGAR' },
-      { color: 'var(--neon-pink)', text: 'JOB OFFER UP TO 8 LPA' },
-      { color: '#ffaad4', text: '8HR ONLINE + 24HR ON-SITE' },
+      { color: '#714b67', text: 'BUILD ON ODOO PLATFORM' }, { color: '#c63b74', text: 'VIRTUAL → ON-SITE AT GANDHINAGAR' },
+      { color: 'var(--neon-pink)', text: 'JOB OFFER UP TO 8 LPA' }, { color: '#ffaad4', text: '8HR ONLINE + 24HR ON-SITE' },
     ],
-    badge: '3 MEMBERS · 1 TEAM',
   },
   {
-    id: 4,
-    icon: '🤖',
-    name: 'EL AI HACKATHON',
-    category: 'ARTIFICIAL INTELLIGENCE · ML · INNOVATION',
-    deadline: '⟳ TEAM: NOT DECIDED',
-    deadlineClass: 'deadline-purple blink',
-    themeClass: 'card-theme-3',
-    nameColor: 'var(--neon-orange)',
+    id: 4, icon: '🤖', name: 'EL AI HACKATHON',
+    category: 'ARTIFICIAL INTELLIGENCE · ML · INNOVATION', deadline: '⟳ TEAM: NOT DECIDED',
+    deadlineClass: 'deadline-purple blink', themeClass: 'card-theme-3', nameColor: 'var(--neon-orange)',
     categoryStyle: { background: 'rgba(255,149,0,0.1)', color: 'var(--neon-orange)', border: '1px solid rgba(255,149,0,0.3)' },
-    teams: [],
-    isTBD: true,
+    teams: [], isTBD: true,
     meta: [
       { color: 'var(--neon-orange)', text: 'ARUNESHWARAN — CONFIRMED ENTRY' },
       { color: 'var(--neon-purple)', text: 'TEAM ASSEMBLY PENDING' },
     ],
-    badge: '? MEMBERS · FORMING',
   },
 ];
 
-/* ── Components ── */
+/* ── Helper: get badge text ── */
+function getBadge(event) {
+  if (event.isTBD) return '? MEMBERS · FORMING';
+  let memberCount = 0;
+  event.teams.forEach(t => memberCount += t.members.length);
+  return `${memberCount} MEMBERS · ${event.teams.length} TEAM${event.teams.length > 1 ? 'S' : ''}`;
+}
 
-function LiveClock() {
-  const [time, setTime] = useState('--:--:--');
-  useEffect(() => {
-    const tick = () => {
-      const now = new Date();
-      setTime(
-        `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}.${String(Math.floor(now.getMilliseconds()/10)).padStart(2,'0')}`
-      );
-    };
-    const id = setInterval(tick, 50);
-    return () => clearInterval(id);
-  }, []);
+/* ── Helper: count all unique members ── */
+function countAllMembers(events) {
+  const names = new Set();
+  events.forEach(e => e.teams.forEach(t => t.members.forEach(m => names.add(m.name))));
+  return names.size;
+}
+
+/* ── Persist helpers (localStorage) ── */
+function loadEvents() {
+  try {
+    const saved = localStorage.getItem('event_data');
+    if (saved) return JSON.parse(saved);
+  } catch (e) { /* ignore */ }
+  return DEFAULT_EVENTS;
+}
+function saveEvents(events) {
+  localStorage.setItem('event_data', JSON.stringify(events));
+}
+
+/* ═══════════════════════════════════════
+   COMPONENTS
+   ═══════════════════════════════════════ */
+
+/* ── Modal Overlay ── */
+function Modal({ title, onClose, children }) {
   return (
-    <div className="live-ticker">
-      <div className="ticker-label">◈ SYSTEM TIME — MISSION CLOCK ◈</div>
-      <div className="ticker-time">{time}</div>
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-box" onClick={e => e.stopPropagation()}>
+        <div className="modal-header">
+          <span>{title}</span>
+          <button className="btn-small btn-pink" onClick={onClose}>✕</button>
+        </div>
+        <div className="modal-body">{children}</div>
+      </div>
     </div>
   );
 }
 
-function EventCard({ event, isAdmin }) {
+/* ── Event Card ── */
+function EventCard({ event, isAdmin, onAddMember, onRemoveMember, onEditEvent, onDeleteEvent, onAddTeam }) {
   return (
     <div className={`event-card ${event.themeClass}`}>
       <div className="card-header">
@@ -163,7 +143,15 @@ function EventCard({ event, isAdmin }) {
             <div className="event-category" style={event.categoryStyle}>{event.category}</div>
           </div>
         </div>
-        <div className={`deadline-chip ${event.deadlineClass}`}>{event.deadline}</div>
+        <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
+          <div className={`deadline-chip ${event.deadlineClass}`}>{event.deadline}</div>
+          {isAdmin && (
+            <>
+              <button className="btn-small btn-cyan" onClick={() => onEditEvent(event)}>✎ EDIT</button>
+              <button className="btn-small btn-pink" onClick={() => onDeleteEvent(event.id)}>✕</button>
+            </>
+          )}
+        </div>
       </div>
       <div className="card-body">
         {event.isTBD ? (
@@ -176,22 +164,40 @@ function EventCard({ event, isAdmin }) {
               <span className="tag-chip tag-orange">HACKATHON FORMAT</span>
               <span className="tag-chip tag-cyan">DEADLINE: TBD</span>
             </div>
+            {isAdmin && (
+              <button className="btn-small btn-cyan" style={{ marginTop: '16px' }} onClick={() => onAddTeam(event.id)}>+ ADD TEAM</button>
+            )}
           </div>
         ) : (
-          <div className={`teams-grid ${event.teams.length > 1 ? 'two-col' : 'one-col'}`}>
-            {event.teams.map((team, ti) => (
-              <div className="team-block" key={ti}>
-                <div className={`team-label ${team.isCaptain ? 'captain-tag' : ''}`}>{team.label}</div>
-                {team.members.map((m, mi) => (
-                  <div className="member-row" key={mi}>
-                    <span className="member-num">{m.num}</span>
-                    {m.name}
-                    {m.isLead && <span className="captain-star">★ LEAD</span>}
-                  </div>
-                ))}
-              </div>
-            ))}
-          </div>
+          <>
+            <div className={`teams-grid ${event.teams.length > 1 ? 'two-col' : 'one-col'}`}>
+              {event.teams.map((team, ti) => (
+                <div className="team-block" key={ti}>
+                  <div className={`team-label ${team.isCaptain ? 'captain-tag' : ''}`}>{team.label}</div>
+                  {team.members.map((m, mi) => (
+                    <div className="member-row" key={mi}>
+                      <span className="member-num">{m.num}</span>
+                      {m.name}
+                      {m.isLead && <span className="captain-star">★ LEAD</span>}
+                      {isAdmin && (
+                        <button
+                          className="btn-remove"
+                          title="Remove member"
+                          onClick={() => onRemoveMember(event.id, ti, mi)}
+                        >✕</button>
+                      )}
+                    </div>
+                  ))}
+                  {isAdmin && (
+                    <button className="btn-add-member" onClick={() => onAddMember(event.id, ti)}>+ Add Member</button>
+                  )}
+                </div>
+              ))}
+            </div>
+            {isAdmin && (
+              <button className="btn-small btn-cyan" style={{ marginTop: '12px' }} onClick={() => onAddTeam(event.id)}>+ ADD TEAM</button>
+            )}
+          </>
         )}
 
         <div className="event-meta">
@@ -201,98 +207,172 @@ function EventCard({ event, isAdmin }) {
               {m.text}
             </div>
           ))}
-          <span className="number-badge">{event.badge}</span>
+          <span className="number-badge">{getBadge(event)}</span>
         </div>
       </div>
     </div>
   );
 }
 
-/* ── Main App ── */
+/* ═══════════════════════════════════════
+   MAIN APP
+   ═══════════════════════════════════════ */
 function App() {
   const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [events, setEvents] = useState(loadEvents);
+
+  // Scraper
   const [scrapeUrl, setScrapeUrl] = useState('');
   const [scrapeResult, setScrapeResult] = useState(null);
   const [scraping, setScraping] = useState(false);
-  const canvasRef = useRef(null);
 
+  // Modals
+  const [showAddEvent, setShowAddEvent] = useState(false);
+  const [editingEvent, setEditingEvent] = useState(null);
+  const [addMemberTarget, setAddMemberTarget] = useState(null); // { eventId, teamIdx }
+  const [newMemberName, setNewMemberName] = useState('');
+  const [newMemberIsLead, setNewMemberIsLead] = useState(false);
+
+  // Add Event form
+  const [newEvent, setNewEvent] = useState({ icon: '🏆', name: '', category: '', deadline: '' });
+
+  const canvasRef = useRef(null);
   const isAdmin = session && ADMIN_EMAILS.includes(session.user.email);
 
-  /* ── Auth: handle hash token on page load + listen for changes ── */
+  /* ── Persist events on change ── */
+  useEffect(() => { saveEvents(events); }, [events]);
+
+  /* ── Auth ── */
   useEffect(() => {
-    // This picks up the #access_token=... from the URL after Google redirect
     supabase.auth.getSession().then(({ data: { session: s } }) => {
       setSession(s);
       setLoading(false);
-      // Clean the URL hash so it doesn't keep re-triggering
       if (window.location.hash && window.location.hash.includes('access_token')) {
         window.history.replaceState(null, '', window.location.pathname);
       }
     });
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, s) => {
-      setSession(s);
-    });
-
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, s) => setSession(s));
     return () => subscription.unsubscribe();
   }, []);
 
-  /* ── Starfield Canvas ── */
+  /* ── Starfield ── */
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
-    let stars = [];
-    let animId;
-
+    let stars = [], animId;
     const resize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
-    const init = () => {
-      stars = [];
-      for (let i = 0; i < 180; i++) {
-        stars.push({
-          x: Math.random() * canvas.width, y: Math.random() * canvas.height,
-          r: Math.random() * 1.2, o: Math.random() * 0.5 + 0.1, speed: Math.random() * 0.15 + 0.03,
-        });
-      }
-    };
-    const draw = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      stars.forEach(s => {
-        ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(180,220,255,${s.o})`; ctx.fill();
-        s.y -= s.speed;
-        if (s.y < 0) { s.y = canvas.height; s.x = Math.random() * canvas.width; }
-      });
-      animId = requestAnimationFrame(draw);
-    };
-
+    const init = () => { stars = []; for (let i = 0; i < 180; i++) stars.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, r: Math.random() * 1.2, o: Math.random() * 0.5 + 0.1, speed: Math.random() * 0.15 + 0.03 }); };
+    const draw = () => { ctx.clearRect(0, 0, canvas.width, canvas.height); stars.forEach(s => { ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2); ctx.fillStyle = `rgba(180,220,255,${s.o})`; ctx.fill(); s.y -= s.speed; if (s.y < 0) { s.y = canvas.height; s.x = Math.random() * canvas.width; } }); animId = requestAnimationFrame(draw); };
     resize(); init(); draw();
-    window.addEventListener('resize', () => { resize(); init(); });
-    return () => cancelAnimationFrame(animId);
+    const onResize = () => { resize(); init(); };
+    window.addEventListener('resize', onResize);
+    return () => { cancelAnimationFrame(animId); window.removeEventListener('resize', onResize); };
   }, []);
 
+  /* ── Auth actions ── */
   const login = async () => {
-    await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: { redirectTo: window.location.origin },
-    });
+    await supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.origin } });
+  };
+  const logout = async () => { await supabase.auth.signOut(); setSession(null); };
+
+  /* ── Event CRUD ── */
+  const handleAddEvent = () => {
+    if (!newEvent.name.trim()) return;
+    const themeIdx = events.length % THEMES.length;
+    const theme = THEMES[themeIdx];
+    const evt = {
+      id: Date.now(),
+      icon: newEvent.icon || '🏆',
+      name: newEvent.name.toUpperCase(),
+      category: newEvent.category.toUpperCase(),
+      deadline: newEvent.deadline || 'TBD',
+      ...theme,
+      teams: [],
+      isTBD: true,
+      meta: [],
+    };
+    setEvents(prev => [...prev, evt]);
+    setNewEvent({ icon: '🏆', name: '', category: '', deadline: '' });
+    setShowAddEvent(false);
   };
 
-  const logout = async () => {
-    await supabase.auth.signOut();
-    setSession(null);
+  const handleDeleteEvent = (id) => {
+    if (confirm('Delete this event?')) {
+      setEvents(prev => prev.filter(e => e.id !== id));
+    }
   };
 
+  const handleEditEvent = (event) => {
+    setEditingEvent({ ...event });
+  };
+
+  const handleSaveEdit = () => {
+    setEvents(prev => prev.map(e => e.id === editingEvent.id ? { ...editingEvent, name: editingEvent.name.toUpperCase(), category: editingEvent.category.toUpperCase() } : e));
+    setEditingEvent(null);
+  };
+
+  /* ── Team CRUD ── */
+  const handleAddTeam = (eventId) => {
+    const teamName = prompt('Enter team name (e.g. TEAM DELTA):');
+    if (!teamName) return;
+    setEvents(prev => prev.map(e => {
+      if (e.id !== eventId) return e;
+      const updated = { ...e, teams: [...e.teams, { label: `▶ ${teamName.toUpperCase()}`, members: [] }] };
+      if (updated.isTBD && updated.teams.length > 0) updated.isTBD = false;
+      return updated;
+    }));
+  };
+
+  /* ── Member CRUD ── */
+  const handleAddMember = (eventId, teamIdx) => {
+    setAddMemberTarget({ eventId, teamIdx });
+    setNewMemberName('');
+    setNewMemberIsLead(false);
+  };
+
+  const confirmAddMember = () => {
+    if (!newMemberName.trim() || !addMemberTarget) return;
+    const { eventId, teamIdx } = addMemberTarget;
+    setEvents(prev => prev.map(e => {
+      if (e.id !== eventId) return e;
+      const teams = e.teams.map((t, ti) => {
+        if (ti !== teamIdx) return t;
+        const newNum = String(t.members.length + 1).padStart(2, '0');
+        return { ...t, members: [...t.members, { name: newMemberName.toUpperCase(), num: newNum, isLead: newMemberIsLead }] };
+      });
+      return { ...e, teams };
+    }));
+    setAddMemberTarget(null);
+    setNewMemberName('');
+  };
+
+  const handleRemoveMember = (eventId, teamIdx, memberIdx) => {
+    setEvents(prev => prev.map(e => {
+      if (e.id !== eventId) return e;
+      const teams = e.teams.map((t, ti) => {
+        if (ti !== teamIdx) return t;
+        const members = t.members.filter((_, mi) => mi !== memberIdx).map((m, i) => ({ ...m, num: String(i + 1).padStart(2, '0') }));
+        return { ...t, members };
+      });
+      return { ...e, teams };
+    }));
+  };
+
+  /* ── Scraper ── */
   const handleScrape = async () => {
     if (!scrapeUrl.trim()) return;
     setScraping(true);
     setScrapeResult(null);
     try {
-      const { data, error } = await supabase.functions.invoke('unstop-scraper', {
-        body: { url: scrapeUrl },
+      const response = await fetch('/api/scrape', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: scrapeUrl }),
       });
-      if (error) throw error;
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Scraping failed');
       setScrapeResult(data);
     } catch (err) {
       setScrapeResult({ error: err.message || 'Scraping failed' });
@@ -300,8 +380,29 @@ function App() {
     setScraping(false);
   };
 
-  const totalMembers = 14;
-  const totalTeams = 5;
+  const handleImportScraped = () => {
+    if (!scrapeResult || scrapeResult.error) return;
+    const themeIdx = events.length % THEMES.length;
+    const theme = THEMES[themeIdx];
+    const evt = {
+      id: Date.now(),
+      icon: '📋',
+      name: (scrapeResult.title || 'IMPORTED EVENT').toUpperCase(),
+      category: (scrapeResult.category || 'COMPETITION').toUpperCase(),
+      deadline: scrapeResult.deadline || 'TBD',
+      ...theme,
+      teams: [],
+      isTBD: true,
+      meta: scrapeResult.description ? [{ color: 'var(--neon-cyan)', text: scrapeResult.description.substring(0, 80) }] : [],
+    };
+    setEvents(prev => [...prev, evt]);
+    setScrapeResult(null);
+    setScrapeUrl('');
+  };
+
+  /* ── Stats ── */
+  const totalMembers = countAllMembers(events);
+  const totalTeams = events.reduce((sum, e) => sum + e.teams.length, 0);
 
   if (loading) {
     return (
@@ -313,7 +414,6 @@ function App() {
 
   return (
     <>
-      {/* Background */}
       <canvas ref={canvasRef} style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', zIndex: 0, pointerEvents: 'none' }} />
       <div className="scanline"></div>
 
@@ -333,7 +433,7 @@ function App() {
           <div className="corner-br"></div>
         </header>
 
-        {/* ── AUTH BAR (small, top-right style) ── */}
+        {/* ── AUTH BAR ── */}
         <div className="auth-bar">
           {session ? (
             <>
@@ -359,7 +459,7 @@ function App() {
         {/* ── STATS BAR ── */}
         <div className="stats-bar">
           <div className="stat-item">
-            <span className="stat-num">{String(EVENTS.length).padStart(2, '0')}</span>
+            <span className="stat-num">{String(events.length).padStart(2, '0')}</span>
             <span className="stat-label">Events</span>
           </div>
           <div className="stat-item">
@@ -371,20 +471,35 @@ function App() {
             <span className="stat-label">Teams Formed</span>
           </div>
           <div className="stat-item">
-            <span className="stat-num" style={{ color: 'var(--neon-pink)' }}>01</span>
-            <span className="stat-label">TBD Team</span>
+            <span className="stat-num" style={{ color: 'var(--neon-pink)' }}>
+              {String(events.filter(e => e.isTBD).length).padStart(2, '0')}
+            </span>
+            <span className="stat-label">TBD Teams</span>
           </div>
         </div>
 
-        <LiveClock />
+        {/* ── EVENT CARDS ── */}
+        <div className="section-title">
+          ◈ &nbsp;EVENT DOSSIERS
+          {isAdmin && (
+            <button className="btn-small btn-cyan" style={{ marginLeft: 'auto' }} onClick={() => setShowAddEvent(true)}>+ ADD EVENT</button>
+          )}
+        </div>
 
-        {/* ── EVENT CARDS (visible to EVERYONE) ── */}
-        <div className="section-title">◈ &nbsp;EVENT DOSSIERS</div>
-        {EVENTS.map((event, i) => (
-          <EventCard key={event.id} event={event} isAdmin={isAdmin} />
+        {events.map(event => (
+          <EventCard
+            key={event.id}
+            event={event}
+            isAdmin={isAdmin}
+            onAddMember={handleAddMember}
+            onRemoveMember={handleRemoveMember}
+            onEditEvent={handleEditEvent}
+            onDeleteEvent={handleDeleteEvent}
+            onAddTeam={handleAddTeam}
+          />
         ))}
 
-        {/* ── ADMIN ONLY: UNSTOP SCRAPER ── */}
+        {/* ── ADMIN: UNSTOP SCRAPER ── */}
         {isAdmin && (
           <div className="admin-panel">
             <div className="section-title" style={{ marginTop: 0 }}>◈ &nbsp;ADMIN: UNSTOP SCRAPER</div>
@@ -407,10 +522,13 @@ function App() {
                   <p style={{ color: 'var(--neon-pink)' }}>⚠ {scrapeResult.error}</p>
                 ) : (
                   <div>
-                    <p style={{ color: 'var(--neon-green)' }}>✓ Event Found</p>
+                    <p style={{ color: 'var(--neon-green)', marginBottom: '8px' }}>✓ Event Found</p>
                     <p><strong>Title:</strong> {scrapeResult.title}</p>
                     {scrapeResult.description && <p><strong>Description:</strong> {scrapeResult.description.substring(0, 200)}...</p>}
                     {scrapeResult.deadline && <p><strong>Deadline:</strong> {scrapeResult.deadline}</p>}
+                    <button className="btn-small btn-cyan" style={{ marginTop: '12px' }} onClick={handleImportScraped}>
+                      ✓ IMPORT AS NEW EVENT
+                    </button>
                   </div>
                 )}
               </div>
@@ -424,6 +542,63 @@ function App() {
           <div style={{ marginTop: '6px' }}>B.TECH AIML · 1ST YEAR · BITS SATHY &nbsp;|&nbsp; REPORT DATE: APRIL 24, 2025</div>
         </div>
       </div>
+
+      {/* ═══ MODALS ═══ */}
+
+      {/* Add Event Modal */}
+      {showAddEvent && (
+        <Modal title="◈ ADD NEW EVENT" onClose={() => setShowAddEvent(false)}>
+          <div className="modal-form">
+            <label>Icon (emoji)</label>
+            <input value={newEvent.icon} onChange={e => setNewEvent(p => ({ ...p, icon: e.target.value }))} placeholder="🏆" />
+            <label>Event Name</label>
+            <input value={newEvent.name} onChange={e => setNewEvent(p => ({ ...p, name: e.target.value }))} placeholder="HACKATHON NAME" />
+            <label>Category</label>
+            <input value={newEvent.category} onChange={e => setNewEvent(p => ({ ...p, category: e.target.value }))} placeholder="AI · ML · INNOVATION" />
+            <label>Deadline</label>
+            <input value={newEvent.deadline} onChange={e => setNewEvent(p => ({ ...p, deadline: e.target.value }))} placeholder="MAY 2025" />
+            <button className="btn-full btn-cyan" onClick={handleAddEvent}>CREATE EVENT</button>
+          </div>
+        </Modal>
+      )}
+
+      {/* Edit Event Modal */}
+      {editingEvent && (
+        <Modal title="◈ EDIT EVENT" onClose={() => setEditingEvent(null)}>
+          <div className="modal-form">
+            <label>Icon (emoji)</label>
+            <input value={editingEvent.icon} onChange={e => setEditingEvent(p => ({ ...p, icon: e.target.value }))} />
+            <label>Event Name</label>
+            <input value={editingEvent.name} onChange={e => setEditingEvent(p => ({ ...p, name: e.target.value }))} />
+            <label>Category</label>
+            <input value={editingEvent.category} onChange={e => setEditingEvent(p => ({ ...p, category: e.target.value }))} />
+            <label>Deadline</label>
+            <input value={editingEvent.deadline} onChange={e => setEditingEvent(p => ({ ...p, deadline: e.target.value }))} />
+            <button className="btn-full btn-cyan" onClick={handleSaveEdit}>SAVE CHANGES</button>
+          </div>
+        </Modal>
+      )}
+
+      {/* Add Member Modal */}
+      {addMemberTarget && (
+        <Modal title="◈ ADD MEMBER" onClose={() => setAddMemberTarget(null)}>
+          <div className="modal-form">
+            <label>Member Name</label>
+            <input
+              value={newMemberName}
+              onChange={e => setNewMemberName(e.target.value)}
+              placeholder="MEMBER NAME"
+              onKeyDown={e => e.key === 'Enter' && confirmAddMember()}
+              autoFocus
+            />
+            <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+              <input type="checkbox" checked={newMemberIsLead} onChange={e => setNewMemberIsLead(e.target.checked)} />
+              Team Lead
+            </label>
+            <button className="btn-full btn-cyan" onClick={confirmAddMember}>ADD MEMBER</button>
+          </div>
+        </Modal>
+      )}
     </>
   );
 }

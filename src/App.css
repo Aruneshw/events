@@ -519,3 +519,139 @@
   border-top: 1px solid rgba(255,255,255,0.05);
   margin-top: 40px;
 }
+
+/* ── MODAL OVERLAY ── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(6px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  animation: fadeIn 0.2s ease;
+}
+
+.modal-box {
+  background: #0a0e18;
+  border: 1px solid rgba(0,245,255,0.4);
+  border-radius: 10px;
+  width: 90%;
+  max-width: 460px;
+  box-shadow: 0 0 40px rgba(0,245,255,0.15), 0 0 80px rgba(0,245,255,0.05);
+  animation: slideInUp 0.3s ease;
+  overflow: hidden;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  border-bottom: 1px solid rgba(0,245,255,0.15);
+  font-family: 'Orbitron', sans-serif;
+  font-size: 12px;
+  letter-spacing: 3px;
+  color: var(--neon-cyan);
+}
+
+.modal-body {
+  padding: 24px;
+}
+
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.modal-form label {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: rgba(255,255,255,0.5);
+  text-transform: uppercase;
+}
+
+.modal-form input[type="text"],
+.modal-form input:not([type="checkbox"]) {
+  background: rgba(0,10,20,0.8);
+  border: 1px solid rgba(0,245,255,0.3);
+  color: #e0f0ff;
+  font-family: 'Share Tech Mono', monospace;
+  padding: 12px;
+  border-radius: 4px;
+  outline: none;
+  font-size: 14px;
+  transition: border-color 0.3s;
+}
+
+.modal-form input:focus {
+  border-color: var(--neon-cyan);
+  box-shadow: 0 0 10px rgba(0,245,255,0.2);
+}
+
+.btn-full {
+  font-family: 'Share Tech Mono', monospace;
+  padding: 14px;
+  font-size: 14px;
+  letter-spacing: 2px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  margin-top: 8px;
+  background: transparent;
+}
+
+.btn-full.btn-cyan {
+  border: 1px solid var(--neon-cyan);
+  color: var(--neon-cyan);
+}
+.btn-full.btn-cyan:hover {
+  background: var(--neon-cyan);
+  color: var(--dark);
+  box-shadow: 0 0 20px var(--neon-cyan);
+}
+
+/* ── ADMIN INLINE BUTTONS ── */
+.btn-remove {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  background: transparent;
+  border: 1px solid rgba(255,0,110,0.3);
+  color: var(--neon-pink);
+  padding: 2px 6px;
+  border-radius: 2px;
+  cursor: pointer;
+  margin-left: auto;
+  opacity: 0;
+  transition: all 0.2s ease;
+}
+.member-row:hover .btn-remove {
+  opacity: 1;
+}
+.btn-remove:hover {
+  background: var(--neon-pink);
+  color: var(--dark);
+}
+
+.btn-add-member {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  background: transparent;
+  border: 1px dashed rgba(0,245,255,0.3);
+  color: rgba(0,245,255,0.5);
+  padding: 8px;
+  width: 100%;
+  margin-top: 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s;
+  letter-spacing: 1px;
+}
+.btn-add-member:hover {
+  border-color: var(--neon-cyan);
+  color: var(--neon-cyan);
+  background: rgba(0,245,255,0.05);
+}
