@@ -13,6 +13,15 @@ const ADMIN_EMAILS = [
   'harinisrim27@gmail.com',
 ];
 
+function normalizeEmail(email) {
+  return String(email || '').trim().toLowerCase();
+}
+
+function isAdminEmail(email) {
+  const e = normalizeEmail(email);
+  return ADMIN_EMAILS.some(a => normalizeEmail(a) === e);
+}
+
 /* ── Theme presets for event cards ── */
 const THEMES = [
   { themeClass: 'card-theme-0', nameColor: '#7eb8f7', categoryStyle: { background: 'rgba(66,133,244,0.15)', color: '#7eb8f7', border: '1px solid rgba(66,133,244,0.3)' }, deadlineClass: 'deadline-red' },
@@ -110,7 +119,7 @@ function loadEvents() {
   try {
     const saved = localStorage.getItem('event_data');
     if (saved) return JSON.parse(saved);
-  } catch (e) { /* ignore */ }
+  } catch { /* ignore */ }
   return DEFAULT_EVENTS;
 }
 function saveEvents(events) {
@@ -211,8 +220,9 @@ function LoginPage({ onLogin }) {
       } else if (data?.user) {
         onLogin(data.user);
       }
-    } catch (err) {
-      setError(err?.message || 'An error occurred');
+    } catch (error) {
+      const msg = error?.message || 'An error occurred';
+      setError(msg);
     } finally {
       setLoading(false);
     }
@@ -225,7 +235,7 @@ function LoginPage({ onLogin }) {
         provider: 'google',
         options: { redirectTo: window.location.origin }
       });
-    } catch (err) {
+    } catch {
       setError('Google login failed');
     } finally {
       setLoading(false);
@@ -294,7 +304,7 @@ function LoginPage({ onLogin }) {
               letterSpacing: '1px',
               margin: 0,
             }}>
-              Admin Dashboard
+              Sign in to view events (admins can edit)
             </p>
           </div>
 
@@ -511,9 +521,9 @@ function LoginPage({ onLogin }) {
             lineHeight: '1.5',
             textAlign: 'center',
           }}>
-            ⚠ ADMIN ACCESS ONLY
+            Edit access is restricted
             <br />
-            Authorized admins:
+            Admin emails:
             <br />
             {ADMIN_EMAILS.map((email, idx) => (
               <div key={idx} style={{ color: 'rgba(0,245,255,0.6)', marginTop: '4px' }}>
@@ -533,6 +543,89 @@ function LoginPage({ onLogin }) {
     </div>
   );
 }
+
+/* ── Non-Admin View (logged in but no edit rights) ── */
+function NonAdminView({ session, events, totalMembers, totalTeams, onLogout }) {
+  const canvasRef = useRef(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let stars = [], animId;
+    const resize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
+    const init = () => { stars = []; for (let i = 0; i < 180; i++) stars.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, r: Math.random() * 1.2, o: Math.random() * 0.5 + 0.1, speed: Math.random() * 0.15 + 0.03 }); };
+    const draw = () => { ctx.clearRect(0, 0, canvas.width, canvas.height); stars.forEach(s => { ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2); ctx.fillStyle = `rgba(180,220,255,${s.o})`; ctx.fill(); s.y -= s.speed; if (s.y < 0) { s.y = canvas.height; s.x = Math.random() * canvas.width; } }); animId = requestAnimationFrame(draw); };
+    resize(); init(); draw();
+    const onResize = () => { resize(); init(); };
+    window.addEventListener('resize', onResize);
+    return () => { cancelAnimationFrame(animId); window.removeEventListener('resize', onResize); };
+  }, []);
+
+  return (
+    <>
+      <canvas ref={canvasRef} style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', zIndex: 0, pointerEvents: 'none' }} />
+      <div className="scanline"></div>
+      <div className="wrapper">
+        <header className="header">
+          <div className="corner-tl"></div>
+          <div className="corner-tr"></div>
+          <div className="header-badge">◆ EVENT MANAGEMENT SYSTEM ◆</div>
+          <h1>UPCOMING EVENTS<br/>DASHBOARD</h1>
+          <div className="header-sub">Event Management Portal &nbsp;|&nbsp; View Only</div>
+          <div className="header-line"></div>
+          <div className="corner-bl"></div>
+          <div className="corner-br"></div>
+        </header>
+
+        <div className="auth-bar">
+          <span className="auth-badge auth-badge-blue">
+            ✓ {session.user.email}
+            <span className="user-tag">USER</span>
+          </span>
+          <button className="btn-small btn-pink" onClick={onLogout}>LOGOUT</button>
+        </div>
+
+        <div className="stats-bar">
+          <div className="stat-item">
+            <span className="stat-num">{String(events.length).padStart(2, '0')}</span>
+            <span className="stat-label">Events</span>
+          </div>
+          <div className="stat-item">
+            <span className="stat-num">{totalMembers}</span>
+            <span className="stat-label">Team Members</span>
+          </div>
+          <div className="stat-item">
+            <span className="stat-num">{String(totalTeams).padStart(2, '0')}</span>
+            <span className="stat-label">Teams Formed</span>
+          </div>
+        </div>
+
+        <div className="section-title">◈ &nbsp;EVENT DOSSIERS</div>
+
+        {events.map(event => (
+          <EventCard
+            key={event.id}
+            event={event}
+            isAdmin={false}
+            onAddMember={() => {}}
+            onRemoveMember={() => {}}
+            onEditEvent={() => {}}
+            onDeleteEvent={() => {}}
+            onAddTeam={() => {}}
+          />
+        ))}
+
+        <div className="footer">
+          <div>◈ EVENT MANAGEMENT SYSTEM ◈</div>
+          <div style={{ marginTop: '6px' }}>Manage competitions, teams, and events efficiently &nbsp;|&nbsp; Last Updated: APRIL 24, 2025</div>
+        </div>
+      </div>
+    </>
+  );
+}
+
+// Public (non-auth) view removed: app requires login to view content.
 
 /* ── Modal Overlay ── */
 function Modal({ title, onClose, children }) {
@@ -660,16 +753,15 @@ function App() {
   const [showVisitors, setShowVisitors] = useState(false);
 
   const canvasRef = useRef(null);
-  const isAdmin = session && ADMIN_EMAILS.includes(session.user.email);
+  const isAdmin = Boolean(session?.user?.email && isAdminEmail(session.user.email));
 
   /* ── Persist events on change (localStorage + Database) ── */
   useEffect(() => { 
     saveEvents(events);
-    // Sync each event to database
-    events.forEach(event => {
-      syncEventToDB(event);
-    });
-  }, [events]);
+    if (!isAdmin) return;
+    // Sync each event to database (admins only)
+    events.forEach(event => { syncEventToDB(event); });
+  }, [events, isAdmin]);
 
   /* ── Fetch events from database on load ── */
   useEffect(() => {
@@ -679,23 +771,45 @@ function App() {
         setEvents(dbEvents);
       }
     };
-    // Only load from DB if isAdmin (after auth check)
-    if (isAdmin) {
+    // Any authenticated user can view current DB events
+    if (session?.user?.id) {
       loadFromDB();
     }
-  }, [isAdmin]);
+  }, [session?.user?.id]);
 
   /* ── Auth ── */
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session: s } }) => {
-      setSession(s);
-      setLoading(false);
-      if (window.location.hash && window.location.hash.includes('access_token')) {
-        window.history.replaceState(null, '', window.location.pathname);
+    let cancelled = false;
+
+    const initAuth = async () => {
+      try {
+        // Supabase OAuth (PKCE) returns ?code=... and needs an exchange step.
+        const url = new URL(window.location.href);
+        const hasCode = url.searchParams.get('code');
+        if (hasCode) {
+          await supabase.auth.exchangeCodeForSession(window.location.href);
+          window.history.replaceState(null, '', window.location.origin + window.location.pathname);
+        }
+
+        const { data: { session: s } } = await supabase.auth.getSession();
+        if (!cancelled) setSession(s);
+      } finally {
+        if (!cancelled) setLoading(false);
+
+        // Back-compat cleanup (older implicit flow hash tokens)
+        if (window.location.hash && window.location.hash.includes('access_token')) {
+          window.history.replaceState(null, '', window.location.pathname);
+        }
       }
-    });
+    };
+
+    initAuth();
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, s) => setSession(s));
-    return () => subscription.unsubscribe();
+    return () => {
+      cancelled = true;
+      subscription.unsubscribe();
+    };
   }, []);
 
   /* ── Log visitor on page load ── */
@@ -707,7 +821,7 @@ function App() {
           user_agent: navigator.userAgent,
           page_url: window.location.href,
         });
-      } catch (e) { /* silently fail */ }
+      } catch { /* silently fail */ }
     };
     logVisit();
   }, [session]);
@@ -751,6 +865,7 @@ function App() {
 
   /* ── Event CRUD ── */
   const handleAddEvent = () => {
+    if (!isAdmin) return;
     if (!newEvent.name.trim()) return;
     const themeIdx = events.length % THEMES.length;
     const theme = THEMES[themeIdx];
@@ -771,22 +886,26 @@ function App() {
   };
 
   const handleDeleteEvent = (id) => {
+    if (!isAdmin) return;
     if (confirm('Delete this event?')) {
       setEvents(prev => prev.filter(e => e.id !== id));
     }
   };
 
   const handleEditEvent = (event) => {
+    if (!isAdmin) return;
     setEditingEvent({ ...event });
   };
 
   const handleSaveEdit = () => {
+    if (!isAdmin) return;
     setEvents(prev => prev.map(e => e.id === editingEvent.id ? { ...editingEvent, name: editingEvent.name.toUpperCase(), category: editingEvent.category.toUpperCase() } : e));
     setEditingEvent(null);
   };
 
   /* ── Team CRUD ── */
   const handleAddTeam = (eventId) => {
+    if (!isAdmin) return;
     const teamName = prompt('Enter team name (e.g. TEAM DELTA):');
     if (!teamName) return;
     setEvents(prev => prev.map(e => {
@@ -799,12 +918,14 @@ function App() {
 
   /* ── Member CRUD ── */
   const handleAddMember = (eventId, teamIdx) => {
+    if (!isAdmin) return;
     setAddMemberTarget({ eventId, teamIdx });
     setNewMemberName('');
     setNewMemberIsLead(false);
   };
 
   const confirmAddMember = () => {
+    if (!isAdmin) return;
     if (!newMemberName.trim() || !addMemberTarget) return;
     const { eventId, teamIdx } = addMemberTarget;
     setEvents(prev => prev.map(e => {
@@ -821,6 +942,7 @@ function App() {
   };
 
   const handleRemoveMember = (eventId, teamIdx, memberIdx) => {
+    if (!isAdmin) return;
     setEvents(prev => prev.map(e => {
       if (e.id !== eventId) return e;
       const teams = e.teams.map((t, ti) => {
@@ -834,6 +956,7 @@ function App() {
 
   /* ── Scraper ── */
   const handleScrape = async () => {
+    if (!isAdmin) return;
     if (!scrapeUrl.trim()) return;
     setScraping(true);
     setScrapeResult(null);
@@ -853,6 +976,7 @@ function App() {
   };
 
   const handleImportScraped = () => {
+    if (!isAdmin) return;
     if (!scrapeResult || scrapeResult.error) return;
     const themeIdx = events.length % THEMES.length;
     const theme = THEMES[themeIdx];
@@ -884,15 +1008,15 @@ function App() {
     );
   }
 
-  // Show login page if not authenticated or not authorized admin
-  if (!session || !isAdmin) {
+  // Show login page if not authenticated
+  if (!session) {
+    return <LoginPage onLogin={() => {}} />;
+  }
+
+  // Non-admin users see events but without edit controls
+  if (!isAdmin) {
     return (
-      <LoginPage 
-        onLogin={() => {
-          // Session will be updated via auth state change listener
-          // which will trigger a re-render
-        }}
-      />
+      <NonAdminView session={session} events={events} totalMembers={totalMembers} totalTeams={totalTeams} onLogout={logout} />
     );
   }
 

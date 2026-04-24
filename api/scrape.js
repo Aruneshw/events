@@ -75,7 +75,7 @@ export default async function handler(req, res) {
             category = json.about || json.eventAttendanceMode || null;
             organizer = json.organizer?.name || null;
           }
-        } catch (e) {
+        } catch {
           // ignore parse errors
         }
       }
