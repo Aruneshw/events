@@ -655,3 +655,37 @@
   color: var(--neon-cyan);
   background: rgba(0,245,255,0.05);
 }
+
+/* ── VISITOR TABLE ── */
+.visitor-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 12px;
+  margin-top: 12px;
+}
+
+.visitor-table th {
+  padding: 10px 14px;
+  text-align: left;
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: var(--neon-cyan);
+  font-weight: 400;
+  background: rgba(0,245,255,0.06);
+  border-bottom: 1px solid rgba(0,245,255,0.15);
+}
+
+.visitor-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  color: rgba(255,255,255,0.5);
+}
+
+.visitor-table tr:hover td {
+  background: rgba(0,245,255,0.03);
+}
+
+.visitor-table tr:nth-child(even) td {
+  background: rgba(255,255,255,0.01);
+}

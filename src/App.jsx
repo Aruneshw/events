@@ -230,12 +230,16 @@ function App() {
   // Modals
   const [showAddEvent, setShowAddEvent] = useState(false);
   const [editingEvent, setEditingEvent] = useState(null);
-  const [addMemberTarget, setAddMemberTarget] = useState(null); // { eventId, teamIdx }
+  const [addMemberTarget, setAddMemberTarget] = useState(null);
   const [newMemberName, setNewMemberName] = useState('');
   const [newMemberIsLead, setNewMemberIsLead] = useState(false);
 
   // Add Event form
   const [newEvent, setNewEvent] = useState({ icon: '🏆', name: '', category: '', deadline: '' });
+
+  // Visitor tracking
+  const [visitors, setVisitors] = useState([]);
+  const [showVisitors, setShowVisitors] = useState(false);
 
   const canvasRef = useRef(null);
   const isAdmin = session && ADMIN_EMAILS.includes(session.user.email);
@@ -256,6 +260,34 @@ function App() {
     return () => subscription.unsubscribe();
   }, []);
 
+  /* ── Log visitor on page load ── */
+  useEffect(() => {
+    const logVisit = async () => {
+      try {
+        await supabase.from('visitors').insert({
+          email: session?.user?.email || 'anonymous',
+          user_agent: navigator.userAgent,
+          page_url: window.location.href,
+        });
+      } catch (e) { /* silently fail */ }
+    };
+    logVisit();
+  }, [session]);
+
+  /* ── Fetch visitors for admin ── */
+  useEffect(() => {
+    if (!isAdmin) return;
+    const fetchVisitors = async () => {
+      const { data } = await supabase
+        .from('visitors')
+        .select('*')
+        .order('visited_at', { ascending: false })
+        .limit(50);
+      if (data) setVisitors(data);
+    };
+    fetchVisitors();
+  }, [isAdmin]);
+
   /* ── Starfield ── */
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -275,7 +307,12 @@ function App() {
   const login = async () => {
     await supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.origin } });
   };
-  const logout = async () => { await supabase.auth.signOut(); setSession(null); };
+  const logout = async () => {
+    await supabase.auth.signOut();
+    setSession(null);
+    // Force reload to clear all state and go back to login view
+    window.location.reload();
+  };
 
   /* ── Event CRUD ── */
   const handleAddEvent = () => {
@@ -530,6 +567,62 @@ function App() {
                       ✓ IMPORT AS NEW EVENT
                     </button>
                   </div>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ── ADMIN: VISITOR LOG ── */}
+        {isAdmin && (
+          <div className="admin-panel" style={{ marginTop: '24px', borderColor: 'rgba(0,245,255,0.3)', background: 'rgba(0,245,255,0.02)' }}>
+            <div className="section-title" style={{ marginTop: 0, cursor: 'pointer' }} onClick={() => setShowVisitors(!showVisitors)}>
+              ◈ &nbsp;VISITOR LOG ({visitors.length})
+              <span style={{ marginLeft: 'auto', fontSize: '16px' }}>{showVisitors ? '▾' : '▸'}</span>
+            </div>
+            {showVisitors && (
+              <div style={{ overflowX: 'auto' }}>
+                <table className="visitor-table">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>EMAIL</th>
+                      <th>TIME (IST)</th>
+                      <th>BROWSER</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {visitors.map((v, i) => {
+                      const ist = new Date(v.visited_at).toLocaleString('en-IN', {
+                        timeZone: 'Asia/Kolkata',
+                        day: '2-digit', month: 'short', year: 'numeric',
+                        hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true,
+                      });
+                      // Parse short browser name from user agent
+                      const ua = v.user_agent || '';
+                      let browser = 'Unknown';
+                      if (ua.includes('Chrome') && !ua.includes('Edg')) browser = 'Chrome';
+                      else if (ua.includes('Firefox')) browser = 'Firefox';
+                      else if (ua.includes('Safari') && !ua.includes('Chrome')) browser = 'Safari';
+                      else if (ua.includes('Edg')) browser = 'Edge';
+
+                      return (
+                        <tr key={v.id || i}>
+                          <td>{i + 1}</td>
+                          <td style={{ color: v.email === 'anonymous' ? 'rgba(255,255,255,0.3)' : 'var(--neon-cyan)' }}>
+                            {v.email}
+                          </td>
+                          <td>{ist}</td>
+                          <td>{browser}</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+                {visitors.length === 0 && (
+                  <p style={{ textAlign: 'center', color: 'rgba(255,255,255,0.3)', padding: '16px', fontFamily: '"Share Tech Mono", monospace', fontSize: '12px' }}>
+                    No visitors logged yet. Run the schema.sql in Supabase first.
+                  </p>
                 )}
               </div>
             )}

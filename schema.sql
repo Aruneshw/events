@@ -61,3 +61,24 @@ using (auth.jwt() ->> 'email' in (select email from public.admins));
 
 create policy "Allow admin write to members" on public.members for all 
 using (auth.jwt() ->> 'email' in (select email from public.admins));
+
+-- ═══════════════════════════════════════
+-- VISITOR TRACKING
+-- ═══════════════════════════════════════
+create table public.visitors (
+    id bigint generated always as identity primary key,
+    email text,
+    visited_at timestamp with time zone default now(),
+    user_agent text,
+    page_url text
+);
+
+alter table public.visitors enable row level security;
+
+-- Anyone (even anon) can INSERT a visit log
+create policy "Allow anon insert to visitors" on public.visitors
+for insert with check (true);
+
+-- Only admins can read visitor logs
+create policy "Allow admin read visitors" on public.visitors
+for select using (auth.jwt() ->> 'email' in (select email from public.admins));
