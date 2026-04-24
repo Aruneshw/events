@@ -105,7 +105,7 @@ function countAllMembers(events) {
   return names.size;
 }
 
-/* ── Persist helpers (localStorage) ── */
+/* ── Persist helpers (localStorage + Database) ── */
 function loadEvents() {
   try {
     const saved = localStorage.getItem('event_data');
@@ -115,6 +115,69 @@ function loadEvents() {
 }
 function saveEvents(events) {
   localStorage.setItem('event_data', JSON.stringify(events));
+}
+
+/* ── Database sync functions ── */
+async function fetchEventsFromDB() {
+  try {
+    const { data, error } = await supabase
+      .from('events')
+      .select('*')
+      .order('created_at', { ascending: true });
+    
+    if (error) throw error;
+    
+    // Convert database format back to app format
+    if (data && data.length > 0) {
+      return data.map(evt => ({
+        id: evt.id,
+        icon: evt.icon || '🏆',
+        name: evt.title,
+        category: evt.category || '',
+        deadline: evt.deadline || 'TBD',
+        themeClass: evt.theme_class,
+        nameColor: evt.name_color,
+        categoryStyle: evt.category_style ? JSON.parse(evt.category_style) : {},
+        deadlineClass: evt.deadline_class,
+        teams: evt.teams_data ? JSON.parse(evt.teams_data) : [],
+        isTBD: evt.is_tbd || false,
+        meta: evt.meta_data ? JSON.parse(evt.meta_data) : [],
+      }));
+    }
+  } catch (err) {
+    console.error('Error fetching events from DB:', err);
+  }
+  return null;
+}
+
+async function syncEventToDB(event) {
+  try {
+    const { error } = await supabase
+      .from('events')
+      .upsert({
+        id: String(event.id),
+        title: event.name,
+        category: event.category,
+        deadline: event.deadline,
+        icon: event.icon,
+        theme_class: event.themeClass,
+        name_color: event.nameColor,
+        category_style: JSON.stringify(event.categoryStyle),
+        deadline_class: event.deadlineClass,
+        teams_data: JSON.stringify(event.teams),
+        is_tbd: event.isTBD,
+        meta_data: JSON.stringify(event.meta),
+        created_at: new Date().toISOString(),
+      }, {
+        onConflict: 'id',
+      });
+    
+    if (error) throw error;
+    return true;
+  } catch (err) {
+    console.error('Error syncing event to DB:', err);
+    return false;
+  }
 }
 
 /* ═══════════════════════════════════════
@@ -223,7 +286,7 @@ function LoginPage({ onLogin }) {
               letterSpacing: '2px',
               textShadow: '0 0 10px rgba(0,245,255,0.3)',
             }}>
-              PCDP PORTAL
+              EVENT MANAGER
             </h1>
             <p style={{
               fontSize: '12px',
@@ -231,7 +294,7 @@ function LoginPage({ onLogin }) {
               letterSpacing: '1px',
               margin: 0,
             }}>
-              ADMIN ACCESS
+              Admin Dashboard
             </p>
           </div>
 
@@ -599,8 +662,28 @@ function App() {
   const canvasRef = useRef(null);
   const isAdmin = session && ADMIN_EMAILS.includes(session.user.email);
 
-  /* ── Persist events on change ── */
-  useEffect(() => { saveEvents(events); }, [events]);
+  /* ── Persist events on change (localStorage + Database) ── */
+  useEffect(() => { 
+    saveEvents(events);
+    // Sync each event to database
+    events.forEach(event => {
+      syncEventToDB(event);
+    });
+  }, [events]);
+
+  /* ── Fetch events from database on load ── */
+  useEffect(() => {
+    const loadFromDB = async () => {
+      const dbEvents = await fetchEventsFromDB();
+      if (dbEvents && dbEvents.length > 0) {
+        setEvents(dbEvents);
+      }
+    };
+    // Only load from DB if isAdmin (after auth check)
+    if (isAdmin) {
+      loadFromDB();
+    }
+  }, [isAdmin]);
 
   /* ── Auth ── */
   useEffect(() => {
@@ -824,10 +907,10 @@ function App() {
         <header className="header">
           <div className="corner-tl"></div>
           <div className="corner-tr"></div>
-          <div className="header-badge">◆ CLASSIFIED: COMPETITION INTEL ◆</div>
-          <h1>UPCOMING EVENT<br/>BATTLE REPORT</h1>
+          <div className="header-badge">◆ EVENT MANAGEMENT SYSTEM ◆</div>
+          <h1>UPCOMING EVENTS<br/>DASHBOARD</h1>
           <div className="header-sub">
-            ARUNESHWARAN K &nbsp;|&nbsp; B.TECH AIML · 1ST YEAR &nbsp;|&nbsp; APRIL 2025
+            Event Management Portal &nbsp;|&nbsp; Admin Dashboard
           </div>
           <div className="header-line"></div>
           <div className="corner-bl"></div>
@@ -981,8 +1064,8 @@ function App() {
 
         {/* ── FOOTER ── */}
         <div className="footer">
-          <div>◈ CLASSIFIED INTEL — GENERATED FOR ARUNESHWARAN K ◈</div>
-          <div style={{ marginTop: '6px' }}>B.TECH AIML · 1ST YEAR · BITS SATHY &nbsp;|&nbsp; REPORT DATE: APRIL 24, 2025</div>
+          <div>◈ EVENT MANAGEMENT SYSTEM ◈</div>
+          <div style={{ marginTop: '6px' }}>Manage competitions, teams, and events efficiently &nbsp;|&nbsp; Last Updated: APRIL 24, 2025</div>
         </div>
       </div>
 
